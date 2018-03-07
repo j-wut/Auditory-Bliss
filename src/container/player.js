@@ -15,7 +15,7 @@ class Player extends Component{
             position: 0.0,
             playFromPosition: 0,
             repeat:0,
-            shuffle: false
+            shuffle: false,
         }
     }
 
@@ -42,13 +42,21 @@ class Player extends Component{
         this.setState({status:Sound.status.PLAYING});
     }
     lastHandler = () =>{
-        
+        var next=this.state.track-1;
+        if(next<0)
+            next=this.state.tracks.length-1;
+        if(this.state.position<0.1){
+            this.setState({track:this.state.track-1});
+        }
+        this.setState({playFromPosition:0});
+
     }
     nextHandler = () =>{
+        this.setState({track:this.state.track+1});
 
     }
     toggleRepeat = () =>{
-
+        this.setState({repeat:(this.state.repeat+1)%3});
     }
     toggleShuffle = () =>{
         this.setState({shuffle:!this.state.shuffle});
@@ -56,6 +64,14 @@ class Player extends Component{
 
     handlePickSong = (index) =>{
         this.setState({track:index,status:Sound.status.PLAYING});
+    }
+
+    handleSongPlaying = (audio) =>{
+        this.setState({elapsed:this.formatMilliseconds(audio.position),total:this.formatMilliseconds(audio.duration),position:audio.position/audio.duration});
+    }
+
+    handleSongFinished =() =>{
+        this.nextHandler();
     }
 
 
@@ -67,6 +83,12 @@ class Player extends Component{
                         <Songs pickSong={this.handlePickSong} songs={this.state.songs}/>
                     </div>
                     <div className="player">
+                        <Sound
+                            url={this.prepareUrl(this.state.track.stream_url)}
+                            playStatus={this.state.status}
+                            onPlaying={this.handleSongPlaying}
+                            playFromPosition={this.state.playFromPosition}
+                            onFinishedPlaying={this.handleSongFinished}/>
                         <Progress elapsed={this.state.elapsed} total={this.state.total} position={this.state.position}/>
                         <Controls status={[this.state.status,repeat,shuffle]} back={this.lastHandler} playPause={this.togglePlay} next={this.nextHandler} repeat={this.toggleRepeat} shuffle={this.toggleShuffle}/>
                     </div>
