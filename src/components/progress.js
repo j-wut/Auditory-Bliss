@@ -11,3 +11,5 @@ class Progress extends Component{
         );
     }
 }
+
+export default Progress;
