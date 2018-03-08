@@ -46,7 +46,11 @@ class Player extends Component{
         this.setState({status:Sound.status.PLAYING});
     }
     lastHandler = () =>{
-        var last=(this.state.track-1+this.state.tracks.length)%this.state.tracks.length;
+        var last;
+        if(!this.state.shuffle || this.state.history.length==0)
+            last=(this.state.track-1+this.state.tracks.length)%this.state.tracks.length;
+        else
+            last=this.state.history.pop();
         if(this.state.position<0.1){
             this.setState({track:last});
         }
@@ -57,12 +61,14 @@ class Player extends Component{
         if(!this.state.shuffle)
             this.setState({track:(this.state.track+1)%this.state.tracks.length});
         else{
-            var hist = this.state.history.slice();
+            var hist = this.state.history;
             hist.push(this.state.track);
+            if(hist.length>this.state.tracks.length*2)
+                hist.shift(); //making sure random history isnt too long
             var next=Math.floor(Math.random()*this.state.tracks.length);
             if(next == this.state.track)
                 next++;
-            this.setState({track:next%this.state.tracks.length,history:hist});
+            this.setState({track:next%this.state.tracks.length});
         }
     }
     toggleRepeat = () =>{
