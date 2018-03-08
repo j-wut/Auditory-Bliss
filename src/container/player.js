@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Sound from 'react-sound';
+import Axios from 'axios';
 
 import Songs from '../components/songs';
 import Progress from '../components/progress';
@@ -8,9 +9,10 @@ import Controls from '../components/controls';
 class Player extends Component{
     constructor(props){
         super(props);
+        this.client_id = '2f98992c40b8edf17423d93bda2e04ab';
         this.state ={
             track: 0,
-            tracks: [1,2,3,4,5],
+            tracks: [],
             status: Sound.status.PAUSED,
             elapsed: '00:00',
             total: '00:00',
@@ -20,10 +22,23 @@ class Player extends Component{
             shuffle: false,
             history: []
         }
+        
     }
 
-    componentDidMount(){
-        //After Loaded
+    componentDidMount=()=>{
+        var url="https://api.sondcloud.com/tracks?client_id="+this.client_id+"&q=silence";
+        console.log(url);
+        Axios.get(url).then(function(response){this.setTracks(response)}).catch(function(err){
+            console.log(err);
+        });
+    }
+    setTracks=(response)=>{
+        const tracks=response.data.tracks.slice();
+        this.setState({tracks:tracks});
+    }
+    prepareUrl=(url)=> {
+        //Attach client id to stream url
+        return `${url}?client_id=${this.client_id}`
     }
 
     formatms(ms){
@@ -47,7 +62,7 @@ class Player extends Component{
     }
     lastHandler = () =>{
         var last;
-        if(!this.state.shuffle || this.state.history.length==0)
+        if(!this.state.shuffle || this.state.history.length===0)
             last=(this.state.track-1+this.state.tracks.length)%this.state.tracks.length;
         else
             last=this.state.history.pop();
@@ -66,7 +81,7 @@ class Player extends Component{
             if(hist.length>this.state.tracks.length*2)
                 hist.shift(); //making sure random history isnt too long
             var next=Math.floor(Math.random()*this.state.tracks.length);
-            if(next == this.state.track)
+            if(next === this.state.track)
                 next++;
             this.setState({track:next%this.state.tracks.length});
         }
@@ -96,21 +111,22 @@ class Player extends Component{
 
 
     render() {
-       // if(this.state.device=="pc"){
-            return(
-                <div className="app">
-                    <div className="list" width="15%">
-                        <Songs pickSong={this.handlePickSong} songs={this.state.tracks} selected={this.state.track}/>
-                    </div>
-                    <div className="player">
+    
+        return(
+                <div className="player-container">
+                    
+                    <div className="player" >
                         {/* <Sound
-                            url={this.prepareUrl(this.state.track.stream_url)}
+                            url={this.prepareUrl(this.state.tracks[this.state.track].stream_url)}
                             playStatus={this.state.status}
                             onPlaying={this.handleSongPlaying}
                             playFromPosition={this.state.playFromPosition}
                             onFinishedPlaying={this.handleSongFinished}/> */}
                         <Progress elapsed={this.state.elapsed} total={this.state.total} position={this.state.position}/>
                         <Controls status={[this.state.status,this.state.repeat,this.state.shuffle]} back={this.lastHandler} playPause={this.togglePlay} next={this.nextHandler} repeat={this.toggleRepeat} shuffle={this.toggleShuffle}/>
+                    </div>
+                    <div className="list">
+                        <Songs pickSong={this.handlePickSong} songs={this.state.tracks} selected={this.state.track}/>
                     </div>
                 </div>
             );

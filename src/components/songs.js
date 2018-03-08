@@ -5,14 +5,14 @@ class Songs extends Component{
         var list = [];
         for(var i=0;i<this.props.songs.length;i++){
             const index=i;
-            if(this.props.selected!=i){
-                list.push(<li className="songEntry" onClick={()=>this.props.pickSong(index)}>{this.props.songs[i]}</li>);
+            if(this.props.selected!==i){
+                list.push(<li className="songEntry" onClick={()=>this.props.pickSong(index)}>{this.props.songs[i].title}</li>);
             } else{
-                list.push(<li className="songCurrent">{this.props.songs[i]} ---- </li>);
+                list.push(<li className="songCurrent">{this.props.songs[i].title} ---- </li>);
             }
         }
         return(
-            <ul className="songs">
+            <ul className="song-list">
                 {list}
             </ul>
         );
