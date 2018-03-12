@@ -9,11 +9,10 @@ import Controls from '../components/controls';
 class Player extends Component{
     constructor(props){
         super(props);
-        this.client_id = '2f98992c40b8edf17423d93bda2e04ab';
         this.state ={
             track: 0,
             tracks: [],
-            status: Sound.status.PAUSED,
+            status: Sound.status.PLAYING,
             elapsed: '00:00',
             total: '00:00',
             position: 0.0,
@@ -22,25 +21,30 @@ class Player extends Component{
             shuffle: false,
             history: []
         }
+        this.server="http://localhost:8080/music";
         
     }
 
     componentDidMount=()=>{
-        var url="https://api.sondcloud.com/tracks?client_id="+this.client_id+"&q=silence";
-        console.log(url);
-        Axios.get(url).then(function(response){this.setTracks(response)}).catch(function(err){
+        Axios.get(this.server).then(res => {
+            console.log (res);
+            this.setState({tracks:res.data});
+        }).catch( err => {
             console.log(err);
         });
+        
     }
     setTracks=(response)=>{
         const tracks=response.data.tracks.slice();
         this.setState({tracks:tracks});
     }
-    prepareUrl=(url)=> {
-        //Attach client id to stream url
-        return `${url}?client_id=${this.client_id}`
+    prepURL(){
+        try{
+            return this.server + this.state.tracks[this.state.track]['path'];
+        }catch(err){
+            return err;
+        }
     }
-
     formatms(ms){
         var hours = Math.floor(ms / 3600000);
         ms = ms % 3600000;
@@ -116,12 +120,11 @@ class Player extends Component{
                 <div className="player-container">
                     
                     <div className="player" >
-                        {/* <Sound
-                            url={this.prepareUrl(this.state.tracks[this.state.track].stream_url)}
+                        <Sound
+                            url={this.prepURL()}
                             playStatus={this.state.status}
                             onPlaying={this.handleSongPlaying}
-                            playFromPosition={this.state.playFromPosition}
-                            onFinishedPlaying={this.handleSongFinished}/> */}
+                            onFinishedPlaying={this.handleSongFinished}/>
                         <Progress elapsed={this.state.elapsed} total={this.state.total} position={this.state.position}/>
                         <Controls status={[this.state.status,this.state.repeat,this.state.shuffle]} back={this.lastHandler} playPause={this.togglePlay} next={this.nextHandler} repeat={this.toggleRepeat} shuffle={this.toggleShuffle}/>
                     </div>
