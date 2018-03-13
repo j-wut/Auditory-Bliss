@@ -28,19 +28,65 @@
 }
 
 .player-container{
-  margin-left: 5%;
-  margin-right: 5%;
-  width: 1200px;
-  vertical-align: top;
+  display:flex;
+  border-radius:25px;
+  margin:auto;
+  max-width: 60em;
+  min-width: 40em;
+  min-height:30em;
   background-color: RED;
+  align-content: center;
+  overflow:hidden;
 }
-.list{
-  width:200px;
+.songs{
+  width:20%;
+  float:left;
+  margin:0;
   background-color: green;
+  position:relative;
+  overflow-x: hidden;
+  overflow-y:scroll;
+  direction:rtl
 }
+
+.song-list{
+  direction:ltr;
+  margin:0;
+  padding:0;
+  list-style-type:none;
+  text-align: right;
+}
+.songCurrent{
+  padding:1em;
+  font-style:italic;
+  background-color:red;
+}
+
+::-webkit-scrollbar
+{
+    width: 0px;
+}
+
 .player{
   vertical-align: middle;
-  width: 800px;
-  bottom:0;
-  background-color: blue;
+  width: 80%;
+  position:relative;
+  float:right;
+  margin:auto;
+}
+progress{
+  width:50%;
+}
+.player_time{
+  font-size:small;
+}
+.control{
+  border: 0;
+  height: 5%;
+  margin: auto;
+  text-align: center;
+  font-size:2em;
+  outline: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }

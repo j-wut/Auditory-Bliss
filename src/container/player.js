@@ -118,7 +118,9 @@ class Player extends Component{
     
         return(
                 <div className="player-container">
-                    
+                    <div className="songs">
+                        <Songs pickSong={this.handlePickSong} songs={this.state.tracks} selected={this.state.track}/>
+                    </div>
                     <div className="player" >
                         <Sound
                             url={this.prepURL()}
@@ -128,9 +130,7 @@ class Player extends Component{
                         <Progress elapsed={this.state.elapsed} total={this.state.total} position={this.state.position}/>
                         <Controls status={[this.state.status,this.state.repeat,this.state.shuffle]} back={this.lastHandler} playPause={this.togglePlay} next={this.nextHandler} repeat={this.toggleRepeat} shuffle={this.toggleShuffle}/>
                     </div>
-                    <div className="list">
-                        <Songs pickSong={this.handlePickSong} songs={this.state.tracks} selected={this.state.track}/>
-                    </div>
+                    
                 </div>
             );
        // }else{
