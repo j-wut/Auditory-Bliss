@@ -21,7 +21,7 @@ class Player extends Component{
             shuffle: false,
             history: []
         }
-        this.server="http://localhost:8080/music";
+        this.server="http://54.202.79.143:8080/music";
         
     }
 
