@@ -47,6 +47,7 @@
   overflow-y:scroll;
   direction:rtl;
   background-color:#111;
+  color: white;
 }
 
 .song-list{
@@ -56,10 +57,13 @@
   list-style-type:none;
   text-align: right;
 }
+.songEntry{
+  padding:0.5em;
+}
 .songCurrent{
   padding:1em;
   font-style:italic;
-  color: white;
+  font-weight: Bold;
   background-color:#222;
 }
 

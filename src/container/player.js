@@ -102,7 +102,18 @@ class Player extends Component{
     }
 
     handleSongPlaying = (audio) =>{
-        this.setState({elapsed:this.formatms(audio.position),total:this.formatms(audio.duration),position:audio.position/audio.duration});
+        let duration;
+        try{
+            duration=this.state.tracks[this.state.track].tags.time;
+        }catch(err){
+            console.log('tags werent populated');
+            duration=this.formatms(audio.duration);
+        }finally{
+            if (audio.duration>0){
+                duration=this.formatms(audio.duration);
+            }
+        }
+        this.setState({elapsed:this.formatms(audio.position),total:duration,position:audio.position/audio.duration});
     }
 
     handleSongFinished =() =>{
