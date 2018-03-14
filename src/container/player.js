@@ -21,7 +21,7 @@ class Player extends Component{
             shuffle: false,
             history: []
         }
-        this.server="https://54.202.79.143/music";
+        this.server="http://54.202.79.143/music";
         
     }
 
@@ -73,8 +73,7 @@ class Player extends Component{
         if(this.state.position<0.1){
             this.setState({track:last});
         }
-        this.setState({playFromPosition:0});
-
+        this.setState({status:Sound.status.STOPPED});
     }
     nextHandler = () =>{
         if(!this.state.shuffle)
