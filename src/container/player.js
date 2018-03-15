@@ -21,8 +21,7 @@ class Player extends Component{
             shuffle: false,
             history: []
         }
-        this.server="http://54.202.79.143/music";
-        
+        this.server="https://www.jamescwu.com/music";
     }
 
     componentDidMount=()=>{
